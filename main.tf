@@ -8,7 +8,7 @@ locals {
   user = var.user == "" ? "" : format("--username %s", var.user)
   id = var.id == "" ? "" : format("--identity %s", var.id)
   strict = var.strict == "" ? "" : "--addstrict"
-  backup = var.use_backup == "" ? "" : format("--backup_file %s.backup.%s.",
+  backup = var.use_backup == "" ? "" : format("--backup_file %s.backup.%s",
            var.ssh_config,
            var.backup_postfix)
 }
