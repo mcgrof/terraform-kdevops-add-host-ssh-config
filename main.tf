@@ -26,7 +26,7 @@ resource "null_resource" "ssh_config_remove" {
       format("%s.%s", local.backup, "remove"),
       var.ssh_config
     )
-    working_dir = "${path.module}"
+    working_dir = dirname("${path.module}")
   }
 }
 
@@ -43,7 +43,7 @@ resource "null_resource" "ssh_config_add" {
       format("%s.%s", local.backup, "add"),
       var.ssh_config
     )
-    working_dir = "${path.module}"
+    working_dir = dirname("${path.module}")
   }
   depends_on = [
     "null_resource.ssh_config_remove",
