@@ -58,7 +58,7 @@ def add_host(args):
     if args.port:
         ports = args.port.split(",")
 
-    if len(hosts) > 1 and len(args.port) > 1:
+    if len(hosts) > 1 and len(ports) > 1:
         if len(hosts) != len(ports):
             sys.stdout.write("Number of shorthosts must match number of " +
                              "ports\n")
