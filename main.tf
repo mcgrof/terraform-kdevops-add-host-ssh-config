@@ -46,6 +46,6 @@ resource "null_resource" "ssh_config_add" {
     working_dir = "${path.module}"
   }
   depends_on = [
-    "null_resource.ssh_config_remove",
+    null_resource.ssh_config_remove,
   ]
 }
