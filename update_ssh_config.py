@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import argparse
 import sys
@@ -150,7 +150,7 @@ def main():
     args = parser.parse_args()
 
     if not args.remove and not args.addhost:
-        print "Must specify addition or removal request"
+        print("Must specify addition or removal request")
         sys.exit(0)
 
     if not os.path.isfile(args.ssh_config):
