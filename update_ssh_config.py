@@ -133,7 +133,7 @@ def main():
                         'default is none, so ssh will assumes your localhost ' +
                         'username')
     parser.add_argument('--identity',
-                        help='Used only on addition, the host key to useto ' +
+                        help='Used only on addition, the host key to ' +
                         'use, the default is empty and so no file is provided')
     parser.add_argument('--addstrict',
                         const=True, default=False, action="store_const",
