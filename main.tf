@@ -2,15 +2,15 @@
 
 locals {
   cmd_prefix_remove = var.update_ssh_config_enable != "" ? (var.cmd == "addhost" ? "echo Ignoring remove command" : "") : "echo Ignoring remove cmd: "
-  cmd_prefix_add = var.update_ssh_config_enable != "" ? (var.cmd == "remove" ? "echo Ignoring add command" : "") : "echo Ignoring add cmd: "
-  hostnames = var.hostnames == "" ? "" : format("--hostname %s", var.hostnames)
-  ports = var.ports == "" ? "" : format("--port %s", var.ports)
-  user = var.user == "" ? "" : format("--username %s", var.user)
-  id = var.id == "" ? "" : format("--identity %s", var.id)
-  strict = var.strict == "" ? "" : "--addstrict"
+  cmd_prefix_add    = var.update_ssh_config_enable != "" ? (var.cmd == "remove" ? "echo Ignoring add command" : "") : "echo Ignoring add cmd: "
+  hostnames         = var.hostnames == "" ? "" : format("--hostname %s", var.hostnames)
+  ports             = var.ports == "" ? "" : format("--port %s", var.ports)
+  user              = var.user == "" ? "" : format("--username %s", var.user)
+  id                = var.id == "" ? "" : format("--identity %s", var.id)
+  strict            = var.strict == "" ? "" : "--addstrict"
   backup = var.use_backup == "" ? "" : format("--backup_file %s.backup.%s",
-           var.ssh_config,
-           var.backup_postfix)
+    var.ssh_config,
+  var.backup_postfix)
 }
 
 resource "null_resource" "ssh_config_remove" {

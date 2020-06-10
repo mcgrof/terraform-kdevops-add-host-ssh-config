@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import argparse
 import sys
@@ -6,9 +6,11 @@ import os
 import re
 from shutil import copyfile
 
+
 def key_val(line):
     no_comment = line.split("#")[0]
     return [x.strip() for x in re.split(r"\s+", no_comment.strip(), 1)]
+
 
 def remove_hosts(args):
     hosts = args.remove.split(",")
@@ -21,23 +23,24 @@ def remove_hosts(args):
     for line in lines:
         kv = key_val(line)
         if len(kv) > 1:
-          key, value = kv
-          if key.lower() == "host":
-              if value in hosts:
-                  rm_this_host = True
-                  continue
-              else:
-                  rm_this_host = False
-                  new_lines.append(line)
-          else:
-              if not rm_this_host:
-                  new_lines.append(line)
+            key, value = kv
+            if key.lower() == "host":
+                if value in hosts:
+                    rm_this_host = True
+                    continue
+                else:
+                    rm_this_host = False
+                    new_lines.append(line)
+            else:
+                if not rm_this_host:
+                    new_lines.append(line)
         else:
-          new_lines.append(line)
+            new_lines.append(line)
 
     f = open(args.ssh_config, "w")
     f.write("\n".join([x for x in new_lines]) + "\n")
     f.close()
+
 
 def add_host(args):
     hosts = args.addhost.split(",")
@@ -130,7 +133,7 @@ def main():
                         'default is none, so ssh will assumes your localhost ' +
                         'username')
     parser.add_argument('--identity',
-                        help='Used only on addition, the host key to useto ' +
+                        help='Used only on addition, the host key to ' +
                         'use, the default is empty and so no file is provided')
     parser.add_argument('--addstrict',
                         const=True, default=False, action="store_const",
@@ -147,7 +150,7 @@ def main():
     args = parser.parse_args()
 
     if not args.remove and not args.addhost:
-        print "Must specify addition or removal request"
+        print("Must specify addition or removal request")
         sys.exit(0)
 
     if not os.path.isfile(args.ssh_config):
@@ -167,6 +170,7 @@ def main():
 
     if args.addhost:
         add_host(args)
+
 
 if __name__ == "__main__":
     main()
