@@ -23,7 +23,7 @@ resource "null_resource" "ssh_config_remove" {
       local.ports,
       local.id,
       local.strict,
-      format("%s.%s", local.backup, "remove"),
+      var.use_backup == "" ? "" : format("%s.%s", local.backup, "remove"),
       var.ssh_config
     )
     working_dir = path.module
@@ -40,7 +40,7 @@ resource "null_resource" "ssh_config_add" {
       local.ports,
       local.id,
       local.strict,
-      format("%s.%s", local.backup, "add"),
+      var.use_backup == "" ? "" : format("%s.%s", local.backup, "add"),
       var.ssh_config
     )
     working_dir = path.module
