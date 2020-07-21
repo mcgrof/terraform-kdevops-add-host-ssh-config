@@ -26,7 +26,7 @@ resource "null_resource" "ssh_config_remove" {
       format("%s.%s", local.backup, "remove"),
       var.ssh_config
     )
-    working_dir = "path.module"
+    working_dir = path.module
   }
 }
 
