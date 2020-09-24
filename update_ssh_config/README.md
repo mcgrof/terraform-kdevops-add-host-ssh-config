@@ -18,19 +18,25 @@ Below are example command line uses:
 
 ### The vagrant use case
 
-This will remove the hosts entries for two hosts, kdevops and kdevops-dev.
-This is typically how vagrant first removes the host entries it is about
-to provide an update for. In this case a backup file is going to be used.
+This will remove the hosts entries for two hosts, kdevops and kdevops-dev,
+and then it adds the hosts using the output from `vagrant ssh-config`. The
+output from the command `vagrant ssh-config` is processed by the script,
+to allow further extensions.
+
+A backup file is used, just for safe measures.
 
 ```
-update_ssh_config.py ~/.ssh/config --backup_file ~/.ssh/config.bk --remove kdevops,kdevops-dev
+update_ssh_config.py \
+	~/.ssh/config \
+	--backup_file ~/.ssh/config.bk \
+	--remove kdevops,kdevops-dev \
+	--addvagranthosts
 ```
 
-Vagrant typically follows up and adds each host entry. The easy way to do
-this is to just run `vagrant ssh-config` and append this to your configuration.
-However, if modifications are needed beyond what vagrant provides, additional
-work is required.
+Contrary to the terraform use case we don't perform two operations, and so
+we only use one backup file. This is tested under the test case:
 
+  * `test_0009_add_hosts_vagrant_emulate_top()`
 
 ## The terraform use case
 
@@ -42,9 +48,70 @@ if the ports were different they can be separated by a comma, similar to how
 the hostname and IP addresses are provided. The identity file to use
 is provided.
 
+This is first used for the removal, the IP addresses are given, yet they
+are not processed for the removal:
+
 ```
-update_ssh_config.py --remove kdevops,kdevops-dev --hostname 51.242.126.149,183.167.235.81  --port 22 --identity ~/.ssh/my_new_tmp_key  ~/.ssh/config
+update_ssh_config.py \
+	--remove kdevops,kdevops-dev \
+	--hostname 51.179.84.243,52.195.142.18 \
+	--username mcgrof \
+	--port 22 \
+	--identity ~/.ssh/kdevops_terraform \
+	--addstrict \
+	--backup_file ~/.ssh/config.backup.kdevops.remove \
+	~/.ssh/config
 ```
+
+Then a second call is issued for the addition. Two separate calls are
+made so that there is backup for the ssh configuration for both operations,
+one for removal and another for the addition.
+
+```
+update_ssh_config.py \
+	--addhost kdevops,kdevops-dev \
+	--hostname 51.179.84.243,52.195.142.18 \
+	--username mcgrof \
+	--port 22 \
+	--identity \
+	~/.ssh/kdevops_terraform \
+	--addstrict \
+	--backup_file ~/.ssh/config.backup.kdevops.add \
+	~/.ssh/config
+```
+
+Using two separate calls are however not needed, we split this for
+terraform to be careful, however one can combine both operations in one,
+and only use one backup file:
+
+```
+update_ssh_config.py \
+	--remove kdevops,kdevops-dev \
+	--addhost kdevops,kdevops-dev \
+	--hostname 51.179.84.243,52.195.142.18 \
+	--username mcgrof \
+	--port 22 \
+	--identity \
+	~/.ssh/kdevops_terraform \
+	--addstrict \
+	--backup_file ~/.ssh/config.backup.kdevops.add \
+	~/.ssh/config
+```
+
+This is tested under test case:
+
+  * `test_0007_add_remove_hosts_two_separate_ops_top()`
+
+## Custom KexAlgorithms
+
+Certain old hosts require a custom KexAlgorithms entry to be added.
+To add that use the `--kexalgorithms` parameter. This is tested
+with the following test test cases:
+
+  * `0010_add_hosts_kexalgorithms_vagrant_emulate_top()`: to mimic the use
+    case if used by vagrant
+  * `0011_add_remove_hosts_two_separate_ops_kexalgorithms_top()`: to mimic the
+    use case if used by terraform
 
 ## Rationale for using Python3
 
