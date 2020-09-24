@@ -10,7 +10,8 @@ locals {
   strict            = var.strict == "" ? "" : "--addstrict"
   backup = var.use_backup == "" ? "" : format("--backup_file %s.backup.%s",
     var.ssh_config,
-  var.backup_postfix)
+  custom_kexalgorithms = var.kexalgorithms == "" ? "" : format("--kexalgorithms %s",
+    var.ssh_kexalgorithms)
 }
 
 resource "null_resource" "ssh_config_remove" {
@@ -32,7 +33,7 @@ resource "null_resource" "ssh_config_remove" {
 
 resource "null_resource" "ssh_config_add" {
   provisioner "local-exec" {
-    command = format("%s./update_ssh_config.py --addhost %s %s %s %s %s %s %s %s",
+    command = format("%s./update_ssh_config.py --addhost %s %s %s %s %s %s %s %s %s",
       local.cmd_prefix_add,
       var.shorthosts,
       local.hostnames,
@@ -41,6 +42,7 @@ resource "null_resource" "ssh_config_add" {
       local.id,
       local.strict,
       var.use_backup == "" ? "" : format("%s.%s", local.backup, "add"),
+      local.custom_kexalgorithms,
       var.ssh_config
     )
     working_dir = path.module

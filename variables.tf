@@ -52,6 +52,12 @@ variable "strict" {
   description = "If set to true we'll use strict host settings"
 }
 
+variable "kexalgorithms" {
+  type        = string
+  default     = ""
+  description = "If not empty, a custom ssh KexAlgorithms"
+}
+
 variable "use_backup" {
   type        = string
   default     = ""
