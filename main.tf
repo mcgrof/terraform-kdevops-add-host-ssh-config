@@ -11,7 +11,7 @@ locals {
   backup = var.use_backup == "" ? "" : format("--backup_file %s.backup.%s",
     var.ssh_config)
   custom_kexalgorithms = var.kexalgorithms == "" ? "" : format("--kexalgorithms %s",
-    var.ssh_kexalgorithms)
+    var.kexalgorithms)
 }
 
 resource "null_resource" "ssh_config_remove" {
