@@ -15,40 +15,21 @@ locals {
     var.kexalgorithms)
 }
 
-resource "null_resource" "ssh_config_remove" {
-  provisioner "local-exec" {
-    command = format("%s./update_ssh_config.py --remove %s %s %s %s %s %s %s %s",
-      local.cmd_prefix_remove,
-      var.shorthosts,
-      local.hostnames,
-      local.user,
-      local.ports,
-      local.id,
-      local.strict,
-      var.use_backup == "" ? "" : format("%s.%s", local.backup, "remove"),
-      var.ssh_config
-    )
-    working_dir = path.module
-  }
-}
-
 resource "null_resource" "ssh_config_add" {
   provisioner "local-exec" {
-    command = format("%s./update_ssh_config.py --addhost %s %s %s %s %s %s %s %s %s",
+    command = format("%s./update_ssh_config.py --remove %s --addhost %s %s %s %s %s %s %s %s %s",
       local.cmd_prefix_add,
+      var.shorthosts,
       var.shorthosts,
       local.hostnames,
       local.user,
       local.ports,
       local.id,
       local.strict,
-      var.use_backup == "" ? "" : format("%s.%s", local.backup, "add"),
+      var.use_backup == "" ? "" : format("%s.%s", local.backup, "terraform"),
       local.custom_kexalgorithms,
       var.ssh_config
     )
     working_dir = path.module
   }
-  depends_on = [
-    null_resource.ssh_config_remove,
-  ]
 }
