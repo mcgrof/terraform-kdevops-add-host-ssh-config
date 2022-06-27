@@ -3,6 +3,12 @@
 This module lets you populate your ssh configuration file, typically
 ` ~/.ssh/config` automatically from the created hosts.
 
+# Project home page
+
+We have moved! The new home page is:
+
+  * https://github.com/linux-kdevops/terraform-kdevops-add-host-ssh-config
+
 ## Usage
 
 Below is an example usage:
@@ -39,4 +45,4 @@ The ports can also be a comma separted list.
 
 ### License
 
-This module is released under the GPLv2.
+This module is released under the copyleft-next-0.3.1 license.
